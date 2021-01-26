@@ -59,6 +59,6 @@ net.createServer(function (socket) {
   socket.on('end', function () {
     console.log('Ending connection.')
   })
-}).listen(7979, '127.0.0.1')
+}).listen(process.env['NODE_ENV'] !== 'production' ? 79 : 7979, '127.0.0.1')
 
 console.log('finger_server.js running. To test, run \'finger @127.0.0.1\'')

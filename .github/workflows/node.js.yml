@@ -1,0 +1,36 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests.
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Finger app
+
+on:
+  push: # When new stuff is pushed to the repo
+    branches: [ master ] # only on these branches
+
+env: # set some environment variables (env vars) that last through the workflow
+  APPDIR: ${{ secrets.FINGER_SERVER_DIR }} # Secrets are pulled from the repos secrets list, so that they aren't exposed in this public file.
+  NODE_VERSION: 14.15.0
+
+jobs:
+  # Job 1: Deploy the app
+  deploy-app:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code from ${{ github.repository }} # Github supplies a few variables that can be accessed by the workflow. They all start with 'github.'
+      uses: actions/checkout@v2
+    - name: Copy app to remote server
+      uses: easingthemes/ssh-deploy@v2.1.5 # Here I'm using a third-party action, rather than a Github action. See it at https://github.com/easingthemes/ssh-deploy
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_KEY }}
+        ARGS: "-rltz --delete --exclude '.git/' --exclude '.github/' --exclude 'node_modules/' --exclude 'log/' --stats"
+        REMOTE_HOST: ${{ secrets.SERVER_IP }}
+        REMOTE_USER: ${{ secrets.SERVER_USER }}
+        TARGET: ${{ secrets.FINGER_SERVER_DIR }}
+    - name: Execute build script on remote server. Builds npm and runs pm2.
+      uses: appleboy/ssh-action@master        
+      with:
+        host: ${{ secrets.SERVER_IP }}
+        username: ${{ secrets.SERVER_USER }}
+        key: ${{ secrets.DEPLOY_KEY }}
+        script: ${{ secrets.FINGER_SERVER_DIR }}/build.sh
