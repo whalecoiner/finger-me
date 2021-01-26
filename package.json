@@ -1,0 +1,27 @@
+{
+  "name": "finger-me",
+  "version": "1.0.0",
+  "description": "Finger me in public!",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whalecoiner/finger-me.git"
+  },
+  "keywords": [
+    "finger"
+  ],
+  "author": "Charlie Owen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/whalecoiner/finger-me/issues"
+  },
+  "homepage": "https://github.com/whalecoiner/finger-me#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  }
+}
